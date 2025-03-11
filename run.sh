@@ -26,12 +26,12 @@ echo "Checking Redis connection..."
 echo "PING?"
 docker compose exec "$redis_container" redis-cli -a "$REDIS_PASSWORD" --no-auth-warning ping
 
-echo "Allowing external Redis port $REDIS_EXTERNAL_PORT in ufw..."
-ufw allow "$REDIS_EXTERNAL_PORT"/tcp
+#echo "Allowing external Redis port $REDIS_EXTERNAL_PORT in ufw..."
+#ufw allow "$REDIS_EXTERNAL_PORT"/tcp
 
-# Проверяем, что порт открыт
-echo "Checking if the port $REDIS_EXTERNAL_PORT is open..."
-ss -tlnp | grep "$REDIS_EXTERNAL_PORT"
+## Проверяем, что порт открыт
+#echo "Checking if the port $REDIS_EXTERNAL_PORT is open..."
+#ss -tlnp | grep "$REDIS_EXTERNAL_PORT"
 
 echo "Container IP:"
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' redis-redis-1
