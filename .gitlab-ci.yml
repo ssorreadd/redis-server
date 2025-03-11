@@ -1,0 +1,15 @@
+#redis/.gitlab-ci.yml
+stages:
+  - build_and_deploy
+
+build_and_deploy:
+  stage: build_and_deploy
+  image: docker:latest
+
+  script:
+    - apk add --no-cache bash
+    - bash ./run.sh
+  only:
+    - main
+  tags:
+    - redis
