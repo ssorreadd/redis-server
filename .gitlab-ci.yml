@@ -8,7 +8,7 @@ build_and_deploy:
 
   script:
     - cp .env.example .env
-    - apk add --no-cache bash
+    - apk add --no-cache bash ufw iproute2
     - bash ./run.sh
   only:
     - main
