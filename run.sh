@@ -11,7 +11,6 @@ redis_container="redis"
 
 containers=(
   "redis"
-  "redis-nginx"
 )
 
 echo "Stopping specified containers..."
