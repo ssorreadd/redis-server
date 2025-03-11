@@ -27,7 +27,7 @@ echo "PING?"
 docker compose exec "$redis_container" redis-cli -a "$REDIS_PASSWORD" --no-auth-warning ping
 
 echo "Allowing external Redis port $REDIS_EXTERNAL_PORT in ufw..."
-sudo ufw allow "$REDIS_EXTERNAL_PORT"/tcp
+ufw allow "$REDIS_EXTERNAL_PORT"/tcp
 
 # Проверяем, что порт открыт
 echo "Checking if the port $REDIS_EXTERNAL_PORT is open..."
