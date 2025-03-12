@@ -40,7 +40,7 @@ else
   echo -e "==================================="
 
   echo -n "Stopped: "
-#  docker stop "$redis_container"
+  docker stop "$redis_container"
   echo -e "===================================\n"
   exit 1
 fi
