@@ -7,7 +7,7 @@ build_and_deploy:
   image: docker:latest
 
   script:
-    - cp .env.example .env
+    - cp "$REDIS_ENV" .env
     - apk add --no-cache bash
     - bash ./run.sh
   only:
