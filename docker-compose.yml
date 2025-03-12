@@ -2,14 +2,15 @@ networks:
   default:
 
 services:
-  redis:
+  redis_server:
     image: redis:alpine
+    container_name: redis_server
     restart: unless-stopped
     ports:
       - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
     volumes:
       - redis_data:/data
-    command: ["redis-server", "--bind", "0.0.0.0", "--port", "${REDIS_PORT}", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
+    command: ["--bind", "0.0.0.0", "--port", "${REDIS_PORT}", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
 
 volumes:
   redis_data:
