@@ -58,7 +58,7 @@ echo -n "Container IP: "
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$redis_container"
 
 echo -n "Host IP: "
-ip -4 addr show docker0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
+ip -4 addr show docker0 | grep -o 'inet [0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+' | awk '{print $2}'
 
 echo "Port: $REDIS_EXTERNAL_PORT"
 
