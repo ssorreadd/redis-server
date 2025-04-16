@@ -28,9 +28,6 @@ echo -e "==================================="
 
 echo "Checking Redis connection...  "
 
-PING_RESULT=$(docker compose exec "$redis_container" redis-cli -a "$REDIS_PASSWORD" --no-auth-warning ping 2>/dev/null)
-
-
 max_retries=10
 retry_delay=1
 attempt=1
@@ -44,7 +41,7 @@ while [[ $attempt -le $max_retries ]]; do
     printf "\e[33mPING\e[0m  ------------------>  \e[32m%s\e[0m\n" "$PING_RESULT"
     break
   else
-    printf "\e[33mPING (attempt $attempt)\e[0m  ---->  \e[31m%s\e[0m\n" "$PING_RESULT"
+    printf "\e[33mPING (attempt $attempt)\e[0m  ------>  \e[31m%s\e[0m\n" "$PING_RESULT"
     sleep "$retry_delay"
     ((attempt++))
   fi
