@@ -30,13 +30,29 @@ echo "Checking Redis connection...  "
 
 PING_RESULT=$(docker compose exec "$redis_container" redis-cli -a "$REDIS_PASSWORD" --no-auth-warning ping 2>/dev/null)
 
-if [[ "$PING_RESULT" == "PONG" ]]; then
-  printf "\e[33mPING\e[0m  ------------------>  \e[32m%s\e[0m\n" "$PING_RESULT"
-else
-  printf "\e[33mPING\e[0m  ------------------>  \e[31mFailed\e[0m\n"
 
+max_retries=10
+retry_delay=1
+attempt=1
+
+while [[ $attempt -le $max_retries ]]; do
+  sleep "$retry_delay"
+
+  PING_RESULT=$(docker compose exec "$redis_container" redis-cli -a "$REDIS_PASSWORD" --no-auth-warning ping 2>/dev/null)
+
+  if [[ "$PING_RESULT" == "PONG" ]]; then
+    printf "\e[33mPING\e[0m  ------------------>  \e[32m%s\e[0m\n" "$PING_RESULT"
+    break
+  else
+    printf "\e[33mPING (attempt $attempt)\e[0m  ---->  \e[31m%s\e[0m\n" "$PING_RESULT"
+    sleep "$retry_delay"
+    ((attempt++))
+  fi
+done
+
+if [[ "$PING_RESULT" != "PONG" ]]; then
   echo -e "==================================="
-  printf "\e[31m$PING_RESULT\e[0m\n"
+  printf "\e[31mRedis did not respond with PONG after $max_retries attempts.\e[0m\n"
   echo -e "==================================="
 
   echo -n "Stopped: "
