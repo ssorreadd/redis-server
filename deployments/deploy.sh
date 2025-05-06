@@ -36,8 +36,8 @@ echo -e "==================================="
 
 docker compose up -d --build
 
-docker cp "$REDIS_ACL" "$redis_container:etc/redis/users.acl"
-docker cp "$REDIS_CONF" "$redis_container:etc/redis/redis.conf"
+docker cp "$REDIS_ACL" "$redis_container:/etc/redis/users.acl"
+docker cp "$REDIS_CONF" "$redis_container:/etc/redis/redis.conf"
 docker restart "$redis_container"
 
 echo -e "==================================="
