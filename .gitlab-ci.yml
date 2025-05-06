@@ -10,8 +10,6 @@ build_and_deploy:
     - cd ./deployments/
 
     - cp "$REDIS_ENV" .env
-    - cp "$REDIS_ACL" .users.acl
-    - cp "$REDIS_CONF" .redis.conf
 
     - apk add --no-cache bash
     - bash ./deploy.sh
