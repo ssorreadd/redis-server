@@ -10,8 +10,8 @@ services:
       - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
     volumes:
       - redis_data:/data
-      - ./redis.conf:/etc/redis/redis.conf
-      - ./users.acl:/etc/redis/users.acl:ro
+      - redis.conf:/etc/redis/redis.conf
+      - users.acl:/etc/redis/users.acl:ro
     command: [ "redis-server", "/etc/redis/redis.conf" ]
 
 volumes:
