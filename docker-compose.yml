@@ -11,7 +11,7 @@ services:
     volumes:
       - redis_data:/data
       - ./redis.conf:/etc/redis/redis.conf
-      - ./users.acl:/etc/redis/users.acl:ro
+      - ./users.acl:/etc/redis/users.acl
     command: [ "redis-server", "/etc/redis/redis.conf" ]
 
 volumes:
