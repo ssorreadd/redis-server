@@ -40,7 +40,7 @@ EOF
 
 echo -e "==================================="
 
-docker compose up -d
+docker compose up -d --build
 
 echo -e "==================================="
 

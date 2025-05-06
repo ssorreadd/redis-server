@@ -39,13 +39,9 @@ echo "aclfile /etc/redis/users.acl" >> redis.conf
 
 echo "user ${REDIS_USERNAME} on >${REDIS_PASSWORD} allcommands allkeys" >> users.acl
 
-cat > users.acl <<EOF
-
-EOF
-
 echo -e "==================================="
 
-docker compose up -d
+docker compose up -d --build
 
 echo -e "==================================="
 
@@ -103,7 +99,7 @@ echo "Port: $REDIS_EXTERNAL_PORT"
 
 echo -e "===================================\n"
 
-#rm -f redis.conf users.acl
+rm -f redis.conf users.acl
 
 docker compose exec -it "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" --no-auth-warning
 
