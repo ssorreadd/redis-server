@@ -1,0 +1,18 @@
+networks:
+  default:
+
+services:
+  redis_server:
+    image: redis:alpine
+    container_name: redis_server
+    restart: unless-stopped
+    ports:
+      - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/etc/redis/
+      - ./users.acl:/etc/redis/
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
+
+volumes:
+  redis_data:

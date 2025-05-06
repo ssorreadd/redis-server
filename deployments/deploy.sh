@@ -1,5 +1,7 @@
 #!/bin/bash
 
+- cp "$REDIS_ENV" .env
+
 source .env
 
 if [[ -z "$REDIS_PASSWORD" || -z "$REDIS_EXTERNAL_PORT" || -z "$REDIS_PORT" ]]; then
