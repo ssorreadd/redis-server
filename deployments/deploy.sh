@@ -27,10 +27,9 @@ echo -e "==================================="
 # Генерация конфигурации Redis
 echo "Generating conf files..."
 
-rm -f redis.conf users.acl
+rm -rf redis.conf users.acl    # удалить папки
 
-> redis.conf
-> users.acl
+touch redis.conf users.acl
 
 # Пишем строки по очереди
 echo "bind 0.0.0.0" >> redis.conf
