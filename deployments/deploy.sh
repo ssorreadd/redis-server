@@ -1,6 +1,6 @@
 #!/bin/bash
 
-- cp "$REDIS_ENV" .env
+cp "$REDIS_ENV" .env
 
 source .env
 
