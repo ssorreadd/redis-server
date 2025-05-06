@@ -7,11 +7,14 @@ build_and_deploy:
   image: docker:latest
 
   script:
+    - cp "$CI_PROJECT_DIR/." "./"
 
-    - cp "$REDIS_ENV" .env
-    - cp "$REDIS_ACL" .users.acl
-    - cp "$REDIS_CONF" .redis.conf
+    - cp "$REDIS_ENV" "$CI_PROJECT_DIR/.env"
+    - cp "$REDIS_ACL" "$CI_PROJECT_DIR/.users.acl"
+    - cp "$REDIS_CONF" "$CI_PROJECT_DIR/.redis.conf"
 
+    - apk add --no-cache bash
+    - bash ./run.sh
   only:
     - main
   tags:
