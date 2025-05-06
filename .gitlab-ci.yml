@@ -7,12 +7,10 @@ build_and_deploy:
   image: docker:latest
 
   script:
-    - cd ./deployments/
-
     - cp "$REDIS_ENV" .env
 
     - apk add --no-cache bash
-    - bash ./deploy.sh
+    - bash ./run.sh
   only:
     - main
   tags:
