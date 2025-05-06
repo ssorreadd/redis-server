@@ -25,7 +25,7 @@ echo -e "==================================="
 # Генерация конфигурации Redis
 echo "Generating conf files..."
 
-rm -f redis.conf users.acl
+#rm -f redis.conf users.acl
 
 cat > redis.conf <<EOF
 bind 0.0.0.0
