@@ -101,3 +101,4 @@ echo -e "===================================\n"
 rm -f redis.conf users.acl
 
 docker compose exec -it "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" --no-auth-warning
+
