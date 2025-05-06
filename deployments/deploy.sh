@@ -29,15 +29,19 @@ echo "Generating conf files..."
 
 rm -f redis.conf users.acl
 
-cat > redis.conf <<EOF
-bind 0.0.0.0
-port ${REDIS_PORT}
-appendonly yes
-aclfile /etc/redis/users.acl
-EOF
+> redis.conf
+> users.acl
+
+# Пишем строки по очереди
+echo "bind 0.0.0.0" >> redis.conf
+echo "port ${REDIS_PORT}" >> redis.conf
+echo "appendonly yes" >> redis.conf
+echo "aclfile /etc/redis/users.acl" >> redis.conf
+
+echo "user ${REDIS_USERNAME} on >${REDIS_PASSWORD} allcommands allkeys" >> users.acl
 
 cat > users.acl <<EOF
-user ${REDIS_USERNAME} on >${REDIS_PASSWORD} allcommands allkeys
+
 EOF
 
 echo -e "==================================="
