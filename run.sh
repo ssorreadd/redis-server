@@ -22,20 +22,38 @@ done
 
 echo -e "==================================="
 
+# Генерация конфигурации Redis
+echo "Generating conf files..."
+
+rm -f redis.conf users.acl
+
+cat > redis.conf <<EOF
+bind 0.0.0.0
+port ${REDIS_PORT}
+appendonly yes
+aclfile /etc/redis/users.acl
+EOF
+
+cat > users.acl <<EOF
+user ${REDIS_USERNAME} on >${REDIS_PASSWORD} allcommands allkeys
+EOF
+
+echo -e "==================================="
+
 docker compose up -d
 
 echo -e "==================================="
 
 echo "Checking Redis connection...  "
 
-max_retries=10
+max_retries=3
 retry_delay=1
 attempt=1
 
 while [[ $attempt -le $max_retries ]]; do
   sleep "$retry_delay"
 
-  PING_RESULT=$(docker compose exec "$redis_container" redis-cli -a "$REDIS_PASSWORD" --no-auth-warning ping 2>/dev/null)
+  PING_RESULT=$(docker compose exec "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" ping 2>/dev/null)
 
   if [[ "$PING_RESULT" == "PONG" ]]; then
     printf "\e[33mPING\e[0m  ------------------>  \e[32m%s\e[0m\n" "$PING_RESULT"
@@ -50,6 +68,9 @@ done
 if [[ "$PING_RESULT" != "PONG" ]]; then
   echo -e "==================================="
   printf "\e[31mRedis did not respond with PONG after $max_retries attempts.\e[0m\n"
+  echo -e "==================================="
+
+  printf "\e[31m$PING_RESULT\e[0m\n"
   echo -e "==================================="
 
   echo -n "Stopped: "
@@ -77,4 +98,6 @@ echo "Port: $REDIS_EXTERNAL_PORT"
 
 echo -e "===================================\n"
 
-docker compose exec -it "$redis_container" redis-cli -a "$REDIS_PASSWORD" --no-auth-warning
+rm -f redis.conf users.acl
+
+docker compose exec -it "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" --no-auth-warning

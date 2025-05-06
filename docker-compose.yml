@@ -10,7 +10,9 @@ services:
       - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
     volumes:
       - redis_data:/data
-    command: ["--bind", "0.0.0.0", "--port", "${REDIS_PORT}", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
+      - ./redis.conf:/etc/redis/redis.conf
+      - ./users.acl:/etc/redis/users.acl:ro
+    command: [ "redis-server", "/etc/redis/redis.conf" ]
 
 volumes:
   redis_data:

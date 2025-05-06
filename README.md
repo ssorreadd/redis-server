@@ -29,6 +29,7 @@
 
 **Настройте переменные в .env:**
 
++ **REDIS_USERNAME** — логин для подключения к Redis.
 + **REDIS_PASSWORD** — пароль для подключения к Redis.
 + **REDIS_EXTERNAL_PORT** — внешний порт для подключения к Redis.
 + **REDIS_PORT** — внутренний порт Redis.
