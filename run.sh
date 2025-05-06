@@ -24,6 +24,7 @@ echo -e "==================================="
 
 # Генерация конфигурации Redis
 echo "Generating conf files..."
+echo "$REDIS_USERNAME  $REDIS_REDIS_PASSWORD"
 
 #rm -f redis.conf users.acl
 
@@ -37,6 +38,8 @@ EOF
 cat > users.acl <<EOF
 user ${REDIS_USERNAME} on >${REDIS_PASSWORD} allcommands allkeys
 EOF
+
+echo "$REDIS_USERNAME  $REDIS_REDIS_PASSWORD"
 
 echo -e "==================================="
 
@@ -99,6 +102,7 @@ echo "Port: $REDIS_EXTERNAL_PORT"
 echo -e "===================================\n"
 
 #rm -f redis.conf users.acl
+echo "$REDIS_USERNAME  $REDIS_REDIS_PASSWORD"
 
 docker compose exec -it "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" --no-auth-warning
 
