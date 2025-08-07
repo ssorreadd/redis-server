@@ -44,7 +44,7 @@
 
 ![img.png](readme_src/img.png)
 
-### Очистить данные Redis-сервера
+## Очистить данные Redis-сервера
 
 ```bash
   sudo ./clear.sh
