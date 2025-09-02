@@ -35,7 +35,7 @@ aclfile /etc/redis/users.acl
 EOF
 
 cat > users.acl <<EOF
-user ${REDIS_USERNAME} on ">${REDIS_PASSWORD}" allcommands allkeys
+user ${REDIS_USERNAME} on >${REDIS_PASSWORD} allcommands allkeys
 EOF
 
 echo -e "==================================="
