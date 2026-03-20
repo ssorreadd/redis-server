@@ -1,11 +1,14 @@
 networks:
-  default:
+  redis_network:
+    name: ${DOCKER_SHARED_NETWORK:-default_network}
 
 services:
   redis_server:
     image: redis:alpine
     container_name: redis_server
     restart: unless-stopped
+    networks:
+      - redis_network
     ports:
       - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
     volumes:
