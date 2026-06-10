@@ -4,7 +4,7 @@ networks:
 
 services:
   redis_server:
-    image: redis:alpine
+    image: redis:8.4-alpine
     container_name: redis_server
     restart: unless-stopped
     networks:
