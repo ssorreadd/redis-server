@@ -1,18 +1,15 @@
 #!/bin/bash
 
-redis_container="redis_server"
-redis_volume="redis_redis_data"
+source .env
 
-containers=(
-  "redis_server"
-)
+redis_container="${REDIS_NAME}"
+redis_volume="${REDIS_NAME}_data"
+redis_network="${REDIS_NAME}_network"
 
 echo -e "\n==================================="
 
-echo "Stopping specified containers..."
-for container in "${containers[@]}"; do
-  docker stop "$container"
-done
+echo "Stopping redis container container..."
+docker stop "$redis_container"
 
 echo -e "==================================="
 
@@ -23,6 +20,11 @@ echo -e "==================================="
 
 echo "Remove redis volume..."
 docker volume rm $redis_volume
+
+echo -e "==================================="
+
+echo "Remove redis network..."
+docker network rm $redis_network
 
 echo -e "==================================="
 
