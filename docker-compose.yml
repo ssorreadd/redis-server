@@ -1,21 +1,28 @@
 networks:
   redis_network:
-    name: ${DOCKER_SHARED_NETWORK:-default_network}
+    name: ${REDIS_NAME:-redis_server}_network
+
+volumes:
+  redis_data:
+    name: ${REDIS_NAME:-redis_server}_data
 
 services:
   redis_server:
     image: redis:8.4-alpine
-    container_name: redis_server
-    restart: unless-stopped
-    networks:
-      - redis_network
+    container_name: ${REDIS_NAME:-redis_server}
     ports:
-      - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
+      - "${REDIS_HOST_BIND:-127.0.0.1}:${REDIS_EXTERNAL_PORT:-6379}:${REDIS_PORT:-6379}"
     volumes:
       - redis_data:/data
-      - ./redis.conf:/etc/redis/redis.conf
-      - ./users.acl:/etc/redis/users.acl
-    command: [ "redis-server", "/etc/redis/redis.conf" ]
-
-volumes:
-  redis_data:
+    networks:
+      - redis_network
+    restart: unless-stopped
+    command: [
+      "redis-server",
+      "--bind", "0.0.0.0",
+      "--port", "${REDIS_PORT}",
+      "--appendonly", "yes",
+      "--maxmemory", "${REDIS_MAXMEMORY:-256mb}",
+      "--maxmemory-policy", "${REDIS_MAXMEMORY_POLICY:-allkeys-lru}",
+      "--user", "${REDIS_USERNAME:-default}", "on", "${REDIS_PASSWORD_TYPE}${REDIS_PASSWORD}", "~*", "&*", "+@all"
+    ]

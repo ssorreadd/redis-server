@@ -1,42 +1,24 @@
 #!/bin/bash
 
-source .env
+if [ -f .env ]; then
+  source .env
+else
+  echo "Error: .env not found in the current directory."
+  exit 1
+fi
 
 if [[ -z "$REDIS_PASSWORD" || -z "$REDIS_EXTERNAL_PORT" || -z "$REDIS_PORT" ]]; then
   echo "Error: Variables REDIS_PASSWORD, REDIS_EXTERNAL_PORT, or REDIS_PORT are not set in .env file."
   exit 1
 fi
 
-redis_container="redis_server"
-
-containers=(
-  "redis_server"
-)
+redis_container="${REDIS_NAME:-redis}"
 
 echo -e "\n==================================="
 
-echo "Stopping specified containers..."
-for container in "${containers[@]}"; do
-  docker stop "$container"
-done
-
-echo -e "==================================="
-
-# Генерация конфигурации Redis
-echo "Generating conf files..."
-
-rm -rf redis.conf users.acl
-
-cat > redis.conf <<EOF
-bind 0.0.0.0
-port ${REDIS_PORT}
-appendonly yes
-aclfile /etc/redis/users.acl
-EOF
-
-cat > users.acl <<EOF
-user ${REDIS_USERNAME} on >${REDIS_PASSWORD} allcommands allkeys
-EOF
+echo "Stopping redis container..."
+# Добавлено 2>/dev/null, чтобы убрать ошибку, если контейнера еще нет
+docker stop "$redis_container" 2>/dev/null || true
 
 echo -e "==================================="
 
@@ -53,7 +35,7 @@ attempt=1
 while [[ $attempt -le $max_retries ]]; do
   sleep "$retry_delay"
 
-  PING_RESULT=$(docker compose exec "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" ping 2>/dev/null)
+  PING_RESULT=$(docker exec "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" --no-auth-warning ping 2>/dev/null)
 
   if [[ "$PING_RESULT" == "PONG" ]]; then
     printf "\e[33mPING\e[0m  ------------------>  \e[32m%s\e[0m\n" "$PING_RESULT"
@@ -85,13 +67,12 @@ echo -n "Container IP: "
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$redis_container"
 
 echo -n "Host IP: "
-ip -4 addr show docker0 | grep -o 'inet [0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+' | awk '{print $2}'
+ip -4 addr show docker0 | grep -o 'inet [0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]' | awk '{print $2}'
 
-echo "Port: $REDIS_EXTERNAL_PORT"
+echo -e "\nContainer name: ${redis_container}"
+echo "Network: ${redis_container}_network"
+echo "Port: ${REDIS_EXTERNAL_PORT}"
 
 echo -e "===================================\n"
 
-rm -rf redis.conf users.acl
-
-docker compose exec -it "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" --no-auth-warning
-
+docker exec -it "$redis_container" redis-cli --user "$REDIS_USERNAME" -a "$REDIS_PASSWORD" --no-auth-warning
