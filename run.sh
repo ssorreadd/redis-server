@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 
 check_redis_ping() {
   local password="$1"

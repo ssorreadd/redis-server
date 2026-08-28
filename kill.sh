@@ -1,6 +1,12 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 
-source .env
+if [[ -f .env ]]; then
+  source .env
+else
+  printf "\e[31mError: .env not found in the current directory.\e[0m\n"
+  exit 1
+fi
 
 base_name="${REDIS_NAME:-redis_server}"
 redis_container="${base_name}"
