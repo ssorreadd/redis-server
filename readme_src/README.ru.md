@@ -66,3 +66,7 @@ sudo ./kill.sh
 ```
 
 <img src="kill-output.png" style="max-width: 350px;" alt="notfound">
+
+## Лицензия
+
+Проект распространяется под лицензией [MIT](../LICENSE.md).

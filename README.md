@@ -67,3 +67,7 @@ sudo ./kill.sh
 ```
 
 <img src="readme_src/kill-output.png" style="max-width: 350px;" alt="notfound">
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.md).
