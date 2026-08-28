@@ -11,7 +11,7 @@ services:
     image: redis:8.4-alpine
     container_name: ${REDIS_NAME:-redis_server}
     ports:
-      - "${REDIS_HOST_BIND:-127.0.0.1}:${REDIS_EXTERNAL_PORT:-6379}:${REDIS_PORT:-6379}"
+      - "${REDIS_HOST_BIND_IP:-127.0.0.1}:${REDIS_EXTERNAL_PORT:-6379}:${REDIS_PORT:-6379}"
     volumes:
       - redis_data:/data
     networks:
@@ -20,9 +20,10 @@ services:
     command: [
       "redis-server",
       "--bind", "0.0.0.0",
-      "--port", "${REDIS_PORT}",
+      "--port", "${REDIS_PORT:-6379}",
       "--appendonly", "yes",
       "--maxmemory", "${REDIS_MAXMEMORY:-256mb}",
       "--maxmemory-policy", "${REDIS_MAXMEMORY_POLICY:-allkeys-lru}",
-      "--user", "${REDIS_USERNAME:-default}", "on", "${REDIS_PASSWORD_TYPE}${REDIS_PASSWORD}", "~*", "&*", "+@all"
+      "--user", "default", "off", "-@all",
+      "--user", "${REDIS_USERNAME}", "on", "${REDIS_PASSWORD_TYPE:->}${REDIS_PASSWORD}", "~*", "&*", "+@all"
     ]
