@@ -16,11 +16,17 @@ Before starting, make sure that the **external port** is not occupied by other s
 
 ## Setup and Run
 
-**Copy .env:**
+**Clone the repository:**
+
+```bash
+git clone https://github.com/ssorreadd/redis-server.git
+cd redis-server
+```
+
+**Copy `.env`:**
 ```bash
 cp .env.example .env 
 ```
-
 
 **Configure the variables in `.env`:**
 

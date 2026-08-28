@@ -17,6 +17,13 @@
 
 ## Настройка и запуск
 
+**Скопируйте репозиторий:**
+
+```bash
+git clone https://github.com/ssorreadd/redis-server.git
+cd redis-server
+```
+
 **Скопируйте `.env`:**
 ```bash
   cp .env.example .env 
