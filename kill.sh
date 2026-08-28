@@ -1,34 +1,46 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 
-source .env
+if [[ -f .env ]]; then
+  source .env
+else
+  printf "\e[31mError: .env not found in the current directory.\e[0m\n"
+  exit 1
+fi
 
-redis_container="${REDIS_NAME}"
-redis_volume="${REDIS_NAME}_data"
-redis_network="${REDIS_NAME}_network"
+base_name="${REDIS_NAME:-redis_server}"
+redis_container="${base_name}"
+redis_volume="${base_name}_data"
+redis_network="${base_name}_network"
 
-echo -e "\n==================================="
+echo -e "\n========================================"
+echo "Removing Redis container..."
 
-echo "Stopping redis container container..."
-docker stop "$redis_container"
+if docker container inspect "$redis_container" >/dev/null 2>&1; then
+    docker rm -f "$redis_container" >/dev/null
+    echo -e "\e[32mContainer removed\e[0m"
+else
+    echo -e "\e[33mContainer already removed\e[0m"
+fi
 
-echo -e "==================================="
+echo -e "========================================"
+echo "Removing Redis volume..."
 
-echo "Remove redis container..."
-docker rm $redis_container
+if docker volume inspect "$redis_volume" >/dev/null 2>&1; then
+    docker volume rm "$redis_volume" >/dev/null
+    echo -e "\e[32mVolume removed\e[0m"
+else
+    echo -e "\e[33mVolume already removed\e[0m"
+fi
 
-echo -e "==================================="
+echo -e "========================================"
+echo "Removing Redis network..."
 
-echo "Remove redis volume..."
-docker volume rm $redis_volume
+if docker network inspect "$redis_network" >/dev/null 2>&1; then
+    docker network rm "$redis_network" >/dev/null
+    echo -e "\e[32mNetwork removed\e[0m"
+else
+    echo -e "\e[33mNetwork already removed\e[0m"
+fi
 
-echo -e "==================================="
-
-echo "Remove redis network..."
-docker network rm $redis_network
-
-echo -e "==================================="
-
-echo "Remove .conf & .acl files..."
-rm -rf redis.conf users.acl
-
-echo -e "===================================\n"
+echo -e "========================================\n"
