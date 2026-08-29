@@ -4,7 +4,9 @@
 if [[ -f .env ]]; then
   source .env
 else
-  printf "\e[31mError: .env not found in the current directory.\e[0m\n"
+  printf "\n===============================================\n\n"
+  printf "\e[31mError: .env not found in the current directory.\e[0m\n\n"
+  printf "===============================================\n\n"
   exit 1
 fi
 

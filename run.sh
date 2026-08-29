@@ -77,7 +77,9 @@ trap handle_interrupt INT
 if [[ -f .env ]]; then
   source .env
 else
-  printf "\e[31mError: .env not found in the current directory.\e[0m\n"
+  printf "\n===============================================\n\n"
+  printf "\e[31mError: .env not found in the current directory.\e[0m\n\n"
+  printf "===============================================\n\n"
   exit 1
 fi
 
@@ -85,12 +87,11 @@ fi
 # Validate configuration
 # ===================================================
 
-if [[ -z "${REDIS_USERNAME:-}" ||
-      -z "${REDIS_PASSWORD:-}" ||
-      -z "${REDIS_EXTERNAL_PORT:-}" ||
-      -z "${REDIS_PORT:-}" ]]; then
-
+if [[ -z "${REDIS_USERNAME:-}" || -z "${REDIS_PASSWORD:-}" || -z "${REDIS_HEALTHCHECK_PASSWORD:-}" ]]; then
+  printf "\n=====================================================================================\n\n"
   printf "\e[31mError: Required Redis variables are not set in .env file.\e[0m\n"
+  printf "Please check REDIS_USERNAME, REDIS_PASSWORD and REDIS_HEALTHCHECK_PASSWORD variables.\n\n"
+  printf "=====================================================================================\n\n"
   exit 1
 fi
 

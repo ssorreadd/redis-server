@@ -36,18 +36,28 @@ cp .env.example .env
     + Default: `6379`
 + `REDIS_EXTERNAL_PORT` — external port used to connect to Redis.
     + Default: `6379`
-+ `REDIS_HOST_BIND_IP` — host IP address used to publish the port. For more information, see **[Network Modes][redis-host-bind-en]**.
++ `REDIS_HOST_BIND_IP` — host IP address used to publish the port. See **[Network Modes][redis-host-bind-en]** for more information.
     + Default: `127.0.0.1`
-+ `REDIS_USERNAME` — username used to connect to Redis.
-+ `REDIS_PASSWORD` — password used to connect to Redis.
-    + Do not use the `>` character at the beginning of the password.
-+ `REDIS_PASSWORD_TYPE` — password type:
-    + `>` - plain-text password
-    + `#` - password hashed using `SHA-256`
-+ `REDIS_MAXMEMORY` - maximum amount of RAM Redis can use.
++ `REDIS_USERNAME` — Redis ACL username used to connect to Redis.
++ `REDIS_PASSWORD` — Redis user password.
+    + If `REDIS_PASSWORD_TYPE=#` is used, this must contain the SHA-256 hash of the password.
+    + Do not use `>` at the beginning of the value, as `>` is a special Redis ACL prefix.
++ `REDIS_PASSWORD_TYPE` — Redis ACL password type:
+    + `>` — plain-text password.
+    + `#` — SHA-256 hashed password.
++ `REDIS_MAXMEMORY` — maximum amount of RAM that Redis can use.
     + Default: `256mb`
-+ `REDIS_MAXMEMORY_POLICY` - **[Redis Max Memory Policy][redis-max-memory-policy-en]**
++ `REDIS_MAXMEMORY_POLICY` — **[Redis Max Memory Policy][redis-max-memory-policy-en]**.
     + Default: `allkeys-lru`
++ `REDIS_HEALTHCHECK_USERNAME` — Redis ACL username used for the healthcheck.
+    + Default: `healthcheck`
+    + The user has only the `+ping` permission.
++ `REDIS_HEALTHCHECK_PASSWORD` — password for the healthcheck user.
+    + A separate password is used so that the healthcheck does not require access to the main `REDIS_USERNAME` user.
+    + Do not use the main `REDIS_PASSWORD`.
+    + Do not use `>` at the beginning of the password, as `>` is a special Redis ACL prefix.
+    + The password must be stored in plain text. This is required because `redis-cli` must provide the original password to Redis when performing `AUTH`.
+    + Separating the main and healthcheck users is intentional and allows `REDIS_PASSWORD_TYPE=#` to be used. In this mode, only the SHA-256 hash of the main password needs to be stored in the Redis configuration, without storing the password itself in plain text.
 
 **`run.sh` behavior variables:**
 
