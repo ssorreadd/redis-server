@@ -36,3 +36,34 @@ jobs:
 
       - name: Validate Docker Compose
         run: docker compose config
+
+      - name: Start Redis
+        run: docker compose up -d
+
+      - name: Wait for Redis healthcheck
+        run: |
+          for i in {1..30}; do
+            status=$(docker inspect redis_server --format '{{.State.Health.Status}}')
+
+            if [ "$status" = "healthy" ]; then
+              exit 0
+            fi
+
+            if [ "$status" = "unhealthy" ]; then
+              docker inspect redis_server --format '{{json .State.Health.Log}}' | jq
+              exit 1
+            fi
+
+            sleep 2
+          done
+
+          docker inspect redis_server --format '{{json .State.Health.Log}}' | jq
+          exit 1
+
+      - name: Show logs
+        if: failure()
+        run: docker compose logs
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v
